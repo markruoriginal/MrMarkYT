@@ -1,0 +1,223 @@
+/* ==========================================
+   1. ОБЩИЕ НАСТРОЙКИ СТИЛЯ И ФОНА
+========================================== */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background-color: #0d0e12; /* Глубокий темно-серый цвет фона */
+    color: #e4e6eb;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.container {
+    width: 100%;
+    max-width: 500px;
+    padding: 20px;
+    box-sizing: border-box;
+    text-align: center;
+}
+
+/* ==========================================
+   2. КИБЕРПАНК ЛОГОТИП С НЕОНОВЫМ YT И .RU
+========================================== */
+.logo {
+    font-size: 2.6rem;
+    font-weight: 900;
+    letter-spacing: 1px;
+    margin: 0 0 5px 0;
+    color: #ffffff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Яркий красный неон для букв YT */
+.logo span {
+    color: #ff3333;
+    text-shadow: 0 0 15px rgba(255, 51, 51, 0.7);
+    margin-left: 2px;
+}
+
+/* Маленькая аккуратная приписка .ru сверху */
+.logo .domain {
+    font-size: 1.2rem;
+    color: #4e515a;
+    align-self: flex-start;
+    margin-top: 5px;
+    margin-left: 4px;
+    font-weight: 600;
+}
+
+.subtitle {
+    color: #7a7e85;
+    font-size: 0.95rem;
+    margin-bottom: 30px;
+}
+
+/* ==========================================
+   3. КАРТОЧКА ПРОФИЛЯ И СМАЙЛИК 👋
+========================================== */
+.profile-card {
+    background-color: #16181d; /* Цвет карточки чуть светлее фона */
+    border: 1px solid #282a36;
+    border-radius: 16px;
+    padding: 35px 25px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+}
+
+.avatar-placeholder {
+    font-size: 3rem;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+h2 {
+    font-size: 1.6rem;
+    margin: 0 0 15px 0;
+    color: #ffffff;
+}
+
+.bio {
+    color: #9aa0a6;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin-bottom: 30px;
+}
+
+.links-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+/* ==========================================
+   4. КНОПКИ С НЕОНОВОЙ ПОДСВЕТКОЙ
+========================================== */
+.btn {
+    display: block;
+    padding: 14px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1rem;
+    background-color: #ff3333;
+    color: #ffffff;
+    box-shadow: 0 4px 20px rgba(255, 51, 51, 0.4);
+    box-sizing: border-box;
+    transition: background-color 0.2s, box-shadow 0.2s;
+}
+
+/* Увеличение яркости свечения при наведении */
+.btn:hover {
+    background-color: #ff4d4d;
+    box-shadow: 0 6px 25px rgba(255, 51, 51, 0.7);
+}
+
+/* Уменьшенные кнопки для скачивания проектов */
+.btn-sm {
+    display: inline-block !important;
+    width: auto !important;
+    padding: 10px 24px !important;
+    font-size: 0.9rem !important;
+}
+
+/* ==========================================
+   5. СТИЛИ ДЛЯ ВТОРОЙ СТРАНИЦЫ (projects.html)
+========================================== */
+.projects-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.project-card {
+    background-color: #16181d;
+    border: 1px solid #282a36;
+    border-radius: 12px;
+    padding: 25px;
+    text-align: left;
+    position: relative;
+    box-sizing: border-box;
+}
+
+.project-card h3 {
+    margin: 0 0 10px 0;
+    font-size: 1.3rem;
+    color: #ffffff;
+}
+
+.project-desc {
+    color: #9aa0a6;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    margin: 0 0 20px 0;
+}
+
+/* Рамка карточки Твикера (Бета) */
+.border-beta {
+    border-color: rgba(255, 51, 51, 0.3);
+}
+
+/* Плашка "В разработке" */
+.badge {
+    position: absolute;
+    top: 25px;
+    right: 25px;
+    background-color: rgba(255, 51, 51, 0.1);
+    color: #ff3333;
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 20px;
+    border: 1px solid rgba(255, 51, 51, 0.3);
+}
+
+.btn-group {
+    display: flex;
+    gap: 10px;
+}
+
+/* Серые неактивные кнопки Твикера */
+.btn-disabled {
+    display: inline-block;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    background-color: #1f222a;
+    color: #54575c;
+    border: 1px solid #282a36;
+    cursor: not-allowed;
+}
+
+.btn-beta {
+    background-color: transparent;
+    border: 1px dashed #4e515a;
+}
+
+/* Кнопка "← На главную" */
+.btn-back {
+    display: inline-block;
+    color: #7a7e85;
+    text-decoration: none;
+    font-size: 0.95rem;
+    transition: color 0.2s;
+}
+
+.btn-back:hover {
+    color: #ff3333;
+}
+
+/* ==========================================
+   6. ПОДВАЛ САЙТА (ФУТЕР)
+========================================== */
+.main-footer {
+    margin-top: 35px;
+    font-size: 0.8rem;
+    color: #54575c;
+    line-height: 1.4;
+}
