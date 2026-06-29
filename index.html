@@ -5,10 +5,32 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MrMarkYT.ru</title>
     <link rel="stylesheet" href="style.css">
+    <!-- Подключаем библиотеку Supabase -->
+    <script src="https://jsdelivr.net"></script>
+    <style>
+        /* Аккуратные стили для кнопок и окон авторизации под твою тему */
+        .auth-top-nav { display: flex; justify-content: flex-end; width: 100%; max-width: 600px; margin: 0 auto 15px auto; padding: 0 10px; box-sizing: border-box; }
+        .auth-nav-btn { background: #24b47e; border: none; color: white; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: bold; font-family: inherit; transition: background 0.2s, transform 0.1s; }
+        .auth-nav-btn:hover { background: #1ca06d; }
+        .auth-nav-btn:active { transform: scale(0.98); }
+
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); justify-content: center; align-items: center; z-index: 9999; }
+        .modal-box { background: #1a1a1a; padding: 30px; border-radius: 12px; text-align: center; width: 320px; border: 2px solid #24b47e; position: relative; box-shadow: 0 0 20px rgba(36, 180, 126, 0.3); color: white; font-family: inherit; }
+        .modal-box input { width: 100%; padding: 12px; margin: 10px 0; border-radius: 6px; border: 1px solid #333; background: #262626; color: white; box-sizing: border-box; font-size: 14px; }
+        .modal-box input:focus { border-color: #24b47e; outline: none; }
+        .modal-box button { width: 100%; padding: 12px; background: #24b47e; border: none; color: white; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 14px; margin-top: 10px; }
+        .close-modal { position: absolute; top: 10px; right: 15px; color: #aaa; cursor: pointer; font-size: 24px; }
+        .close-modal:hover { color: #e14d4d; }
+    </style>
 </head>
 <body>
 
     <div class="container">
+        <!-- КНОПКА ВОЙТИ НАД ШАПКОЙ СТРАНИЦЫ -->
+        <nav class="auth-top-nav">
+            <button id="authBtn" class="auth-nav-btn" onclick="openAuthModal()">Войти</button>
+        </nav>
+
         <!-- Шапка сайта -->
         <header class="main-header">
             <h1 class="logo">MrMark<span>YT</span><span class="domain">.ru</span></h1>
@@ -38,6 +60,75 @@
             <p>MrMarkYT &copy; 2026 Все права защищены. Дизайн похожий на Adderly.top</p>
         </footer>
     </div>
+
+    <!-- ВСПЛЫВАЮЩЕЕ ОКНО АВТОРИЗАЦИИ -->
+    <div id="authModal" class="modal-overlay" onclick="closeAuthModal()">
+        <div class="modal-box" onclick="event.stopPropagation()">
+            <span class="close-modal" onclick="closeAuthModal()">&times;</span>
+            <h3 id="modalTitle" style="color: #24b47e; margin-top: 0; margin-bottom: 15px;">Вход в аккаунт</h3>
+            
+            <input type="email" id="authEmail" placeholder="Ваш Gmail" required>
+            <input type="password" id="authPassword" placeholder="Пароль" required>
+            
+            <button id="actionBtn" onclick="processAuth()">Войти</button>
+            <p id="authMessage" style="font-size: 13px; margin-top: 12px; min-height: 15px;"></p>
+            
+            <a href="#" id="toggleAuthMode" onclick="switchMode(event)" style="color: #aaa; font-size: 13px; display:block; margin-top:15px; text-decoration: underline;">Нет аккаунта? Регистрация</a>
+        </div>
+    </div>
+
+    <script>
+        const SUPABASE_URL = "https://supabase.co";
+        const SUPABASE_ANON_KEY = "sb_publishable_ZklrncM4ja7_HUMUfHnviQ_IfTXwBI5"; 
+        const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        let isLoginMode = true;
+
+        function openAuthModal() { document.getElementById('authModal').style.display = 'flex'; }
+        function closeAuthModal() { document.getElementById('authModal').style.display = 'none'; document.getElementById('authMessage').innerText = ''; }
+
+        function switchMode(e) {
+            e.preventDefault();
+            isLoginMode = !isLoginMode;
+            document.getElementById('modalTitle').innerText = isLoginMode ? "Вход в аккаунт" : "Регистрация";
+            document.getElementById('actionBtn').innerText = isLoginMode ? "Войти" : "Создать аккаунт";
+            document.getElementById('toggleAuthMode').innerText = isLoginMode ? "Нет аккаунта? Регистрация" : "Уже есть аккаунт? Войти";
+        }
+
+        async function processAuth() {
+            const email = document.getElementById('authEmail').value.trim();
+            const password = document.getElementById('authPassword').value;
+            const msg = document.getElementById('authMessage');
+            msg.innerText = "Загрузка..."; msg.style.color = "white";
+
+            if (isLoginMode) {
+                const { error } = await supabase.auth.signInWithPassword({ email, password });
+                if (error) { msg.innerText = "Неверный логин или пароль"; msg.style.color = "#e14d4d"; }
+                else { window.location.reload(); }
+            } else {
+                const { error } = await supabase.auth.signUp({ email, password });
+                if (error) { msg.innerText = error.message; msg.style.color = "#e14d4d"; }
+                else { msg.innerText = "Успешно! Теперь авторизуйтесь."; msg.style.color = "#24b47e"; isLoginMode = false; switchMode({preventDefault:()=>{}}); }
+            }
+        }
+
+        async function handleLogout() {
+            await supabase.auth.signOut();
+            window.location.reload();
+        }
+
+        async function checkUserStatus() {
+            const { data: { user } } = await supabase.auth.getUser();
+            if (user) {
+                const authBtn = document.getElementById('authBtn');
+                authBtn.innerText = `Выйти (${user.email.split('@')[0]})`;
+                authBtn.style.background = '#e14d4d';
+                authBtn.setAttribute('onclick', 'handleLogout()');
+            }
+        }
+
+        checkUserStatus();
+    </script>
 
 </body>
 </html>
