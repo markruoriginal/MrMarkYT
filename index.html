@@ -6,31 +6,11 @@
     <title>MrMarkYT.ru</title>
     <link rel="stylesheet" href="style.css">
     <!-- Подключаем библиотеку Supabase -->
-    <script src="https://jsdelivr.net"></script>
-    <style>
-        /* Аккуратные стили для кнопок и окон авторизации под твою тему */
-        .auth-top-nav { display: flex; justify-content: flex-end; width: 100%; max-width: 600px; margin: 0 auto 15px auto; padding: 0 10px; box-sizing: border-box; }
-        .auth-nav-btn { background: #24b47e; border: none; color: white; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: bold; font-family: inherit; transition: background 0.2s, transform 0.1s; }
-        .auth-nav-btn:hover { background: #1ca06d; }
-        .auth-nav-btn:active { transform: scale(0.98); }
-
-        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); justify-content: center; align-items: center; z-index: 9999; }
-        .modal-box { background: #1a1a1a; padding: 30px; border-radius: 12px; text-align: center; width: 320px; border: 2px solid #24b47e; position: relative; box-shadow: 0 0 20px rgba(36, 180, 126, 0.3); color: white; font-family: inherit; }
-        .modal-box input { width: 100%; padding: 12px; margin: 10px 0; border-radius: 6px; border: 1px solid #333; background: #262626; color: white; box-sizing: border-box; font-size: 14px; }
-        .modal-box input:focus { border-color: #24b47e; outline: none; }
-        .modal-box button { width: 100%; padding: 12px; background: #24b47e; border: none; color: white; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 14px; margin-top: 10px; }
-        .close-modal { position: absolute; top: 10px; right: 15px; color: #aaa; cursor: pointer; font-size: 24px; }
-        .close-modal:hover { color: #e14d4d; }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <!-- КНОПКА ВОЙТИ НАД ШАПКОЙ СТРАНИЦЫ -->
-        <nav class="auth-top-nav">
-            <button id="authBtn" class="auth-nav-btn" onclick="openAuthModal()">Войти</button>
-        </nav>
-
         <!-- Шапка сайта -->
         <header class="main-header">
             <h1 class="logo">MrMark<span>YT</span><span class="domain">.ru</span></h1>
@@ -43,7 +23,7 @@
             <div class="avatar-placeholder">👋</div>
             
             <h2>Привет, я Марк</h2>
-            <p class="bio">Создаю контент на ютубе, увлекаюсь технологиями и кастомизацией. Я смотрю Марка Adderly.</p>
+            <p class="bio">Создаю контент на ютубе, увлекаюсь технологиями и кастомизацией. смотрю Марка Adderly.</p>
             
             <!-- Ссылки/Кнопки -->
             <div class="links-grid">
@@ -52,6 +32,8 @@
                 <a href="https://www.twitch.tv/mrmarkytorid" target="_blank" class="btn">Twitch</a>
                 <a href="https://t.me/Marksine2015" target="_blank" class="btn">Мой Telegram</a>
                 <a href="https://github.com/markruoriginal" target="_blank" class="btn">Мой GitHub</a>
+                <a href="https://disk.yandex.ru/d/f1CfBmwEv4683g" target="_blank" class="btn">Скачать Фикс для YTe/TG (RU)</a>
+                <a href="https://drive.google.com/uc?export=download&id=1FwybAOSEmWUBmL8Wwd4ZNtSaXmVXb9En" target="_blank" class="btn">Скачать Фикс для YTe/TG (EN)</a>
             </div>
         </main>
 
