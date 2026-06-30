@@ -44,20 +44,6 @@
     </div>
 
     <!-- ВСПЛЫВАЮЩЕЕ ОКНО АВТОРИЗАЦИИ -->
-    <div id="authModal" class="modal-overlay" onclick="closeAuthModal()">
-        <div class="modal-box" onclick="event.stopPropagation()">
-            <span class="close-modal" onclick="closeAuthModal()">&times;</span>
-            <h3 id="modalTitle" style="color: #24b47e; margin-top: 0; margin-bottom: 15px;">Вход в аккаунт</h3>
-            
-            <input type="email" id="authEmail" placeholder="Ваш Gmail" required>
-            <input type="password" id="authPassword" placeholder="Пароль" required>
-            
-            <button id="actionBtn" onclick="processAuth()">Войти</button>
-            <p id="authMessage" style="font-size: 13px; margin-top: 12px; min-height: 15px;"></p>
-            
-            <a href="#" id="toggleAuthMode" onclick="switchMode(event)" style="color: #aaa; font-size: 13px; display:block; margin-top:15px; text-decoration: underline;">Нет аккаунта? Регистрация</a>
-        </div>
-    </div>
 
     <script>
         const SUPABASE_URL = "https://kbofurmvbiqlkussmgx.supabase.co";
