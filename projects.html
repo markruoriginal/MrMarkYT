@@ -6,7 +6,6 @@
     <title>Проекты — MrMarkYT.ru</title>
     <link rel="stylesheet" href="style.css">
     <!-- Подключаем библиотеку Supabase -->
-    <script src="https://jsdelivr.net"></script>
     <style>
         /* Аккуратные стили для кнопок и окон авторизации под твою тему */
         .auth-top-nav { display: flex; justify-content: flex-end; width: 100%; max-width: 600px; margin: 0 auto 15px auto; padding: 0 10px; box-sizing: border-box; }
@@ -81,79 +80,6 @@
     </div>
 
     <!-- ВСПЛЫВАЮЩЕЕ ОКНО АВТОРИЗАЦИИ -->
-    <div id="authModal" class="modal-overlay" onclick="closeAuthModal()">
-        <div class="modal-box" onclick="event.stopPropagation()">
-            <span class="close-modal" onclick="closeAuthModal()">&times;</span>
-            <h3 id="modalTitle" style="color: #24b47e; margin-top: 0; margin-bottom: 15px;">Вход в аккаунт</h3>
-            
-            <input type="email" id="authEmail" placeholder="Ваш Gmail" required>
-            <input type="password" id="authPassword" placeholder="Пароль" required>
-            
-            <button id="actionBtn" onclick="processAuth()">Войти</button>
-            <p id="authMessage" style="font-size: 13px; margin-top: 12px; min-height: 15px;"></p>
-            
-            <a href="#" id="toggleAuthMode" onclick="switchMode(event)" style="color: #aaa; font-size: 13px; display:block; margin-top:15px; text-decoration: underline;">Нет аккаунта? Регистрация</a>
-        </div>
-    </div>
-
-    <script>
-        const SUPABASE_URL = "https://kbofurmvbiqlkussmgx.supabase.co";
-        const SUPABASE_ANON_KEY = "sb_publishable_ZklrncM4ja7_HUMUfHnviQ_IfTXwBI5"; 
-        const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-        let isLoginMode = true;
-
-        function openAuthModal() { document.getElementById('authModal').style.display = 'flex'; }
-        function closeAuthModal() { document.getElementById('authModal').style.display = 'none'; document.getElementById('authMessage').innerText = ''; }
-
-        function switchMode(e) {
-            e.preventDefault();
-            isLoginMode = !isLoginMode;
-            document.getElementById('modalTitle').innerText = isLoginMode ? "Вход в аккаунт" : "Регистрация";
-            document.getElementById('actionBtn').innerText = isLoginMode ? "Войти" : "Создать аккаунт";
-            document.getElementById('toggleAuthMode').innerText = isLoginMode ? "Нет аккаунта? Регистрация" : "Уже есть аккаунт? Войти";
-        }
-
-        async function processAuth() {
-            const email = document.getElementById('authEmail').value.trim();
-            const password = document.getElementById('authPassword').value;
-            const msg = document.getElementById('authMessage');
-            msg.innerText = "Загрузка..."; msg.style.color = "white";
-
-            if (isLoginMode) {
-                const { error } = await supabase.auth.signInWithPassword({ email, password });
-                if (error) { msg.innerText = "Неверный логин или пароль"; msg.style.color = "#e14d4d"; }
-                else { window.location.reload(); }
-            } else {
-                const { error } = await supabase.auth.signUp({ email, password });
-                if (error) { msg.innerText = error.message; msg.style.color = "#e14d4d"; }
-                else { msg.innerText = "Успешно! Теперь авторизуйтесь."; msg.style.color = "#24b47e"; isLoginMode = false; switchMode({preventDefault:()=>{}}); }
-            }
-        }
-
-        async function handleLogout() {
-            await supabase.auth.signOut();
-            window.location.reload();
-        }
-
-        async function checkUserStatus() {
-            const { data: { user } } = await supabase.auth.getUser();
-            if (user) {
-                // Если юзер залогинен — реклама полностью стирается со страницы
-                const adv = document.getElementById('advertisement');
-                if(adv) adv.remove();
-                
-                // Кнопка меняется на выход
-                const authBtn = document.getElementById('authBtn');
-                authBtn.innerText = `Выйти (${user.email.split('@')})`;
-                authBtn.style.background = '#e14d4d';
-                authBtn.setAttribute('onclick', 'handleLogout()');
-            }
-        }
-
-        checkUserStatus();
-    </script>
-
 </body>
 </html>
 
