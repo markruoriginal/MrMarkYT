@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MrMarkYT.ru - Игры</title>
+    <style>
+        :root { --bg: #0d0e15; --panel: #181a26; --cyan: #00f2fe; --pink: #fe019a; }
+        body { font-family: sans-serif; background: var(--bg); color: #fff; text-align: center; padding: 20px; margin: 0; }
+        .tabs { display: flex; justify-content: center; gap: 10px; margin-bottom: 20px; }
+        .tab-btn { background: var(--panel); border: 1px solid #333; color: #aaa; padding: 10px 20px; border-radius: 20px; cursor: pointer; font-weight: bold; }
+        .tab-btn.active { background: linear-gradient(135deg, var(--cyan), var(--pink)); color: #fff; box-shadow: 0 0 10px var(--cyan); }
+        .screen { display: none; background: var(--panel); border-radius: 20px; padding: 30px; max-width: 360px; margin: 0 auto; box-shadow: 0 0 20px rgba(0,0,0,0.5); }
+        .screen.active { display: block; }
+        .btn { background: linear-gradient(135deg, var(--pink), #7f00ff); color: white; border: none; padding: 12px 25px; font-size: 1rem; font-weight: bold; border-radius: 25px; cursor: pointer; margin-top: 20px; width: 100%; }
+        
+        /* Колесо */
+        .wheel-box { position: relative; width: 220px; height: 220px; margin: 0 auto 20px; }
+        .arrow { position: absolute; top: -12px; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 14px solid transparent; border-right: 14px solid transparent; border-top: 22px solid #fff; z-index: 5; filter: drop-shadow(0 2px 5px rgba(0,0,0,0.5)); }
+        .wheel { width: 100%; height: 100%; border-radius: 50%; border: 4px solid #fff; position: relative; overflow: hidden; transition: transform 4s cubic-bezier(0.15, 0.85, 0.15, 1); background: conic-gradient(var(--cyan) 180deg, var(--pink) 180deg); }
+        .wheel-txt { position: absolute; font-weight: bold; font-size: 1.4rem; color: #fff; text-shadow: 0 2px 5px rgba(0,0,0,0.7); left: 50%; transform: translateX(-50%); }
+        .txt-yes { top: 30px; }
+        .txt-no { bottom: 30px; }
+
+        /* Крестики-нолики */
+        .board { display: grid; grid-template-columns: repeat(3, 90px); gap: 8px; justify-content: center; margin-top: 15px; }
+        .cell { width: 90px; height: 90px; background: rgba(255,255,255,0.05); border: 1px solid #333; border-radius: 10px; font-size: 2.5rem; font-weight: bold; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+        .cell.x { color: var(--cyan); text-shadow: 0 0 8px var(--cyan); }
+        .cell.o { color: var(--pink); text-shadow: 0 0 8px var(--pink); }
+        .cell.win { background: rgba(0, 242, 254, 0.2); border-color: #fff; }
+
+        .nav-btn { display: inline-block; background: linear-gradient(135deg, #7f00ff, var(--cyan)); color: white; text-decoration: none; padding: 15px 30px; font-weight: bold; border-radius: 30px; margin-top: 30px; box-shadow: 0 0 15px rgba(0, 242, 254, 0.4); transition: 0.3s; }
+        .nav-btn:hover { transform: scale(1.05); box-shadow: 0 0 25px var(--cyan); }
+    </style>
+</head>
+<body>
+
+    <h1 style="text-shadow: 0 0 10px var(--cyan); font-size: 2rem;">MrMarkYT.ru - Игры</h1>
+
+    <div class="tabs">
+        <button class="tab-btn active" onclick="tab('wheel-sc')">Колесо</button>
+        <button class="tab-btn" onclick="tab('pred-sc')">🔮 Предсказания</button>
+        <button class="tab-btn" onclick="tab('ttt-sc')">❌⭕ Крестики</button>
+    </div>
+
+    <!-- ИГРА 1: КОЛЕСО -->
+    <div id="wheel-sc" class="screen active">
+        <div class="wheel-box">
+            <div class="arrow"></div>
+            <div id="wheel" class="wheel">
+                <div class="wheel-txt txt-yes"></div>
+                <div class="wheel-txt txt-no"></div>
+            </div>
+        </div>
+        <div id="wheel-res" style="font-size: 1.2rem; font-weight: bold; min-height: 28px;">Задай вопрос и крути! голубой- нет, розовый - да</div>
+        <button class="btn" onclick="spin()">Крутить</button>
+    </div>
+
+    <!-- ИГРА 2: ПРЕДСКАЗАНИЯ -->
+    <div id="pred-sc" class="screen">
+        <h2>Что тебя ждет?</h2>
+        <p id="pred-txt" style="font-size: 1.3rem; min-height: 60px; margin: 20px 0; display: flex; align-items: center; justify-content: center;">Нажми на кнопку...</p>
+        <button class="btn" onclick="predict()">Узнать будущее</button>
+    </div>
+
+    <!-- ИГРА 3: КРЕСТИКИ НОЛИКИ -->
+    <div id="ttt-sc" class="screen">
+        <div id="ttt-txt" style="font-weight: bold; margin-bottom: 10px; font-size: 1.2rem;">Ход: X</div>
+        <div class="board" id="board"></div>
+        <button class="btn" onclick="resetTTT()">Сбросить игру</button>
+    </div>
+
+    <!-- ПЕРЕХОД НА 2 СТРАНИЦУ -->
+<a href="t.me/markcoinrobot/start" class="nav-btn">➡️ Другие игры (Через Telegram)</a>
+<a href="https://disk.yandex.ru/d/f1CfBmwEv4683g" class="nav-btn">🔮Не работает тг на Android? тебе сюда!</a>
+
+    <script>
+        function tab(id) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        // КОЛЕСО (4 секунды)
+        let spinning = false;
+        function spin() {
+            if (spinning) return;
+            spinning = true;
+            const w = document.getElementById('wheel');
+            const res = document.getElementById('wheel-res');
+            const deg = Math.floor(Math.random() * 360) + 2160;
+            w.style.transform = `rotate(${deg}deg)`;
+            res.textContent = "Колесо крутится...";
+            setTimeout(() => {
+                spinning = false;
+                const actualDeg = deg % 360;
+                res.textContent = (actualDeg >= 90 && actualDeg < 270) ? "🎉 Ответ: НЕТ!" : "🎉 Ответ: ДА!";
+            }, 4000);
+        }
+
+        // ПРЕДСКАЗАНИЯ
+        const predictions = [
+            "🔮 Внезапное богатство или крупный выигрыш!", "🚀 Невероятное и веселое приключение.",
+            "💡 Твоя гениальная идея принесет успех.", "🤫 Кто-то готовит для тебя сюрприз.",
+            "🍕 Сегодня идеальный день, чтобы заказать пиццу.", "🔋 Твоя энергия на максимуме — действуй!",
+            "🌟 Ты окажешься в самом центре внимания.", "🎮 Выиграешь сложнейший игровой каток."
+        ];
+        function predict() {
+            document.getElementById('pred-txt').textContent = predictions[Math.floor(Math.random() * predictions.length)];
+        }
+
+        // КРЕСТИКИ-НОЛИКИ
+        let cells = Array(9).fill(""), player = "X", active = true;
+        const wins = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
+        const b = document.getElementById('board');
+
+        function initTTT() {
+            b.innerHTML = "";
+            cells.forEach((_, i) => {
+                const c = document.createElement('div');
+                c.className = 'cell';
+                c.onclick = () => move(c, i);
+                b.appendChild(c);
+            });
+        }
+
+        function move(c, i) {
+            if (cells[i] || !active) return;
+            cells[i] = player;
+            c.textContent = player;
+            c.classList.add(player.toLowerCase());
+            let won = wins.find(w => cells[w[0]] && cells[w[0]] === cells[w[1]] && cells[w[0]] === cells[w[2]]);
+            if (won) {
+                document.getElementById('ttt-txt').textContent = `Победил: ${player}! 🎉`;
+                won.forEach(idx => b.children[idx].classList.add('win'));
+                active = false;
+            } else if (!cells.includes("")) {
+                document.getElementById('ttt-txt').textContent = "Ничья! 🤝";
+                active = false;
+            } else {
+                player = player === "X" ? "O" : "X";
+                document.getElementById('ttt-txt').textContent = `Ход: ${player}`;
+            }
+        }
+
+        function resetTTT() { cells.fill(""); player = "X"; active = true; document.getElementById('ttt-txt').textContent = "Ход: X"; initTTT(); }
+        initTTT();
+    </script>
+</body>
+</html>
