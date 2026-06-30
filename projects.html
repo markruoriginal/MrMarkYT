@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Проекты — MrMarkYT.ru</title>
     <link rel="stylesheet" href="style.css">
-    <!-- Подключаем библиотеку Supabase -->
     <style>
         /* Аккуратные стили для кнопок и окон авторизации под твою тему */
         .auth-top-nav { display: flex; justify-content: flex-end; width: 100%; max-width: 600px; margin: 0 auto 15px auto; padding: 0 10px; box-sizing: border-box; }
@@ -20,36 +19,36 @@
         .modal-box button { width: 100%; padding: 12px; background: #24b47e; border: none; color: white; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 14px; margin-top: 10px; }
         .close-modal { position: absolute; top: 10px; right: 15px; color: #aaa; cursor: pointer; font-size: 24px; }
         .close-modal:hover { color: #e14d4d; }
-
-        /* Блок рекламы, который идеально впишется в ширину твоего контейнера */
-        .adv-block { background: #1d1712; border: 1px solid #d4af37; padding: 20px; border-radius: 10px; margin: 30px auto 10px auto; text-align: center; max-width: 600px; color: #f0e6d2; box-shadow: 0 4px 15px rgba(212, 175, 55, 0.1); font-family: inherit; box-sizing: border-box; }
     </style>
 </head>
 <body>
+
+    <div class="main-container">
+        
         <!-- Шапка -->
         <header class="main-header">
             <h1 class="logo">MrMark<span>YT</span><span class="domain">.ru</span></h1>
             <p class="subtitle">Список моих личных разработок и программ</p>
         </header>
 
-        <!-- Список проектов -->
+        <!-- Список проектов (4 карточки) -->
         <div class="projects-list">
             
             <!-- Проект 1 -->
             <section class="project-card">
-                <h3>8x Компилятор Python 3.12</h3>
-                <p class="project-desc">Удобный инструмент для сборки и компиляции скриптов, написанных на Python версии 3.12.</p>
-                <a href="https://github.com/markruoriginal/x8-Compiler" class="btn btn-sm">Скачать</a>
+                <h3>8x Компилятор Python 3.12 (1.0.0)</h3>
+                <p class="project-desc">Удобный инструмент для сборки и компиляции скриптов, написанных для Python версии 3.12.</p>
+                <a href="https://github.com" class="btn btn-sm">Скачать</a>
             </section>
 
             <!-- Проект 2 -->
             <section class="project-card">
                 <h3>MarkRuTools</h3>
                 <p class="project-desc">Набор полезных утилит и скриптов для автоматизации повседневных задач и кастомизации.</p>
-                <a href="https://github.com/markruoriginal/markru-tools/tree/main" class="btn btn-sm">Скачать</a>
+                <a href="https://github.com" class="btn btn-sm">Скачать</a>
             </section>
 
-            <!-- Проект 3 (Твикер) -->
+            <!-- Проект 3 -->
             <section class="project-card border-beta">
                 <div class="badge">В разработке</div>
                 <h3>MarkRuТвикер</h3>
@@ -60,12 +59,13 @@
                 </div>
             </section>
 
-        </div>
+            <!-- Проект 4 -->
+            <section class="project-card">
+                <h3>SSH КЛИЕНТ</h3>
+                <p class="project-desc">Многофункциональный клиент SSH для управления Linux через WI-FI.</p>
+                <a href="#" class="btn btn-sm">БЕТА-ТЕСТ</a>
+            </section>
 
-        <!-- РЕКЛАМНЫЙ БЛОК (Полностью удалится из кода, когда ты войдешь в аккаунт) -->
-        <div id="advertisement" class="adv-block">
-            <h4 style="margin: 0 0 5px 0; color: #d4af37;">🔥 Яндекс Директ / Реклама</h4>
-            <p style="margin: 0; font-size: 14px;">Войдите в свой аккаунт на сайте, чтобы полностью отключить баннеры рекламы!</p>
         </div>
 
         <!-- Кнопка возврата назад -->
@@ -77,9 +77,8 @@
         <footer class="main-footer">
             <p>MrMarkYT &copy; 2026 Все права защищены.</p>
         </footer>
+
     </div>
 
-    <!-- ВСПЛЫВАЮЩЕЕ ОКНО АВТОРИЗАЦИИ -->
 </body>
 </html>
-
