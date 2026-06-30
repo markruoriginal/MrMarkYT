@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>M a r k - C o i n</title>
+    <style>
+        :root { --bg: #0d0e15; --panel: #181a26; --cyan: #00f2fe; --pink: #fe019a; }
+        body { font-family: sans-serif; background: var(--bg); color: #fff; text-align: center; padding: 20px; margin: 0; }
+        .tabs { display: flex; justify-content: center; gap: 10px; margin-bottom: 20px; }
+        .tab-btn { background: var(--panel); border: 1px solid #333; color: #aaa; padding: 10px 20px; border-radius: 20px; cursor: pointer; font-weight: bold; transition: 0.2s; }
+        .tab-btn.active { background: linear-gradient(135deg, var(--cyan), var(--pink)); color: #fff; box-shadow: 0 0 10px var(--cyan); }
+        .screen { display: none; background: var(--panel); border-radius: 20px; padding: 30px; max-width: 360px; margin: 0 auto; box-shadow: 0 0 20px rgba(0,0,0,0.5); box-sizing: border-box; }
+        .screen.active { display: block; }
+        .btn { background: linear-gradient(135deg, var(--pink), #7f00ff); color: white; border: none; padding: 12px 25px; font-size: 1rem; font-weight: bold; border-radius: 25px; cursor: pointer; margin-top: 15px; width: 100%; }
+        .clicker-nav { display: flex; justify-content: center; gap: 8px; margin-bottom: 20px; background: #11131c; padding: 6px; border-radius: 15px; border: 1px solid #222; }
+        .sub-tab-btn { background: transparent; border: none; color: #888; padding: 8px 12px; font-size: 0.85rem; font-weight: bold; border-radius: 10px; cursor: pointer; flex: 1; transition: 0.2s; }
+        .sub-tab-btn.active { background: #1f2234; color: var(--cyan); }
+        .clicker-section { display: none; }
+        .clicker-section.active { display: block; }
+        .click-core { width: 120px; height: 120px; background: radial-gradient(circle, var(--cyan), #7f00ff); border-radius: 50%; margin: 20px auto; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; font-weight: bold; cursor: pointer; box-shadow: 0 0 20px var(--cyan); transition: transform 0.1s; user-select: none; }
+        .click-core:active { transform: scale(0.92); box-shadow: 0 0 30px var(--pink); }
+        .upg-btn { background: #24273a; border: 1px solid #444; color: #fff; padding: 8px; width: 100%; border-radius: 10px; margin-top: 10px; cursor: pointer; font-size: 0.9rem; }
+        .tg-bonus { background: linear-gradient(135deg, #0088cc, #005580); border: none; color: white; font-weight: bold; padding: 10px; width: 100%; border-radius: 10px; margin-top: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .tg-bonus:disabled { background: #333; color: #777; cursor: not-allowed; }
+        .num-input, .text-input { background: #10111a; border: 2px solid #333; border-radius: 10px; padding: 10px; color: #fff; font-size: 1.1rem; width: 100%; text-align: center; outline: none; box-sizing: border-box; }
+        .num-input { width: 80px; }
+        .shop-item { background: #11131c; border: 1px solid #222; padding: 10px; margin: 8px 0; border-radius: 10px; display: flex; justify-content: space-between; align-items: center; font-size: 0.85rem; text-align: left; }
+        .shop-item button { width: auto; margin-top: 0; padding: 5px 12px; font-size: 0.8rem; border-radius: 15px; }
+        .nav-btn { display: inline-block; background: linear-gradient(135deg, #7f00ff, var(--pink)); color: white; text-decoration: none; padding: 15px 30px; font-weight: bold; border-radius: 30px; margin-top: 30px; }
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); justify-content: center; align-items: center; z-index: 1000; }
+        .modal-content { background: var(--panel); border: 2px solid var(--cyan); padding: 30px; border-radius: 20px; width: 90%; max-width: 340px; box-shadow: 0 0 30px var(--cyan); box-sizing: border-box; position: relative; }
+        .close-modal { position: absolute; top: 10px; right: 15px; font-size: 24px; cursor: pointer; color: #aaa; }
+    </style>
+</head>
+<body>
+    <h1 style="text-shadow: 0 0 10px var(--pink); font-size: 2rem;">Mark-Coin Кликер</h1>
+    <div class="tabs">
+        <button class="tab-btn active" onclick="tab('click-sc')">⚡ Кликер</button>
+    </div>
+
+    <div id="click-sc" class="screen active">
+        <div class="clicker-nav">
+            <button class="sub-tab-btn active" onclick="subTab('sub-click')">⚡ Клик</button>
+            <button class="sub-tab-btn" onclick="subTab('sub-promo')">🎟️ Промокоды</button>
+            <button class="sub-tab-btn" onclick="subTab('sub-shop')">🏪 Магазин</button>
+        </div>
+
+        <div style="font-size: 1.5rem; font-weight: bold; margin-bottom: 5px;">Баланс: <span id="coins" style="color: var(--cyan);">0</span> 🪙</div>
+        <div style="font-size: 0.9rem; color: #aaa; margin-bottom: 15px;">Клик: +<span id="per-click">1</span> | Авто: +<span id="per-sec">0</span>/с</div>
+        
+        <div id="sub-click" class="clicker-section active">
+            <div class="click-core" id="core-btn" onclick="hitCore()">КЛИК!</div>
+            <button class="upg-btn" onclick="buyUpg(1)">⚡ +1 к клику (Цена: <span id="cost1">15</span>)</button>
+            <button class="upg-btn" onclick="buyUpg(2)">🤖 Автокликер +1/с (Цена: <span id="cost2">50</span>)</button>
+            <button id="tg-btn" class="tg-bonus" onclick="claimTgBonus()">🔹 Подписка на ТГ (+200)</button>
+        </div>
+
+        <div id="sub-promo" class="clicker-section">
+            <h4 style="margin-top: 10px;">Активация промокода</h4>
+            <input type="text" id="promo-input" class="text-input" placeholder="ВВЕДИТЕ КОД">
+            <button class="btn" onclick="activatePromo()">Активировать</button>
+            <p id="promo-hint" style="color: #aaa; font-weight: bold; margin-top: 10px; min-height: 20px; font-size: 0.9rem;"></p>
+        </div>
+
+        <div id="sub-shop" class="clicker-section">
+            <h4 style="margin-top: 10px; margin-bottom: 5px;">Смена слова кнопки</h4>
+            <div class="shop-item">
+                <div><strong>Дешевый</strong><br><span style="color: #4caf50;">Тапать 🪙</span></div>
+                <button class="btn" onclick="buyWord('Тапать 🪙', 500)">500</button>
+            </div>
+            <div class="shop-item">
+                <div><strong>Так себе</strong><br><span style="color: #ff9800;">Жмяк 💥</span></div>
+                <button class="btn" onclick="buyWord('Жмяк 💥', 2500)">2.5к</button>
+            </div>
+            <div class="shop-item">
+                <div><strong>Красивый</strong><br><span style="color: #00f2fe;">Клац ✨</span></div>
+                <button class="btn" onclick="buyWord('Клац ✨', 15000)">15к</button>
+            </div>
+            <div class="shop-item">
+                <div><strong>Дорогой</strong><br><span style="color: #fe019a;">БОСС КЛИК 👑</span></div>
+                <button class="btn" onclick="buyWord('БОСС КЛИК 👑', 100000)">100к</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="guess-sc" class="screen">
+        <h3>Компьютер загадал число от 1 до 100</h3>
+        <p id="guess-hint" style="color: #aaa; min-height: 40px;">Попробуй угадать его!</p>
+        <input type="number" id="user-num" class="num-input" min="1" max="100">
+        <button class="btn" onclick="checkGuess()">Проверить</button>
+        <button class="btn" style="background: #24273a;" onclick="resetGuess()">Загадать заново</button>
+    </div>
+
+    <a href="game.html" class="nav-btn"> Обновить (если зависла игра)</a>
+
+    <div id="admin-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeAdmin()">&times;</span>
+            <h2 style="color: var(--cyan); text-shadow: 0 0 10px var(--cyan); margin-top: 0;">🔐 Админка</h2>
+            <div id="admin-auth">
+                <p style="font-size: 0.9rem;">Введи секретный пароль:</p>
+                <input type="password" id="admin-pass" class="text-input" placeholder="Пароль">
+                <button class="btn" onclick="checkAdminPassword()">Войти</button>
+            </div>
+            <div id="admin-panel" style="display: none;">
+                <p style="color: #4caf50; font-weight: bold;">Доступ получен!</p>
+                <button class="btn" style="background: linear-gradient(135deg, #ff9800, #ff5722);" onclick="triggerAdminCheat()">АКТИВИРОВАТЬ ЧИТЫ</button>
+                <div style="background: #10111a; padding: 10px; margin-top: 15px; border-radius: 10px; border: 1px solid #333;">
+                    <div style="font-size: 0.8rem; color: #888;">Рандомный промокод:</div>
+                    <div id="generated-promo" style="color: var(--cyan); font-weight: bold; font-size: 1.1rem; margin-top: 5px;">---</div>
+                </div>
+            </div>
+            <p id="admin-err" style="color: var(--pink); font-size: 0.9rem; margin-top: 10px; font-weight: bold;"></p>
+        </div>
+    </div>
+    <script>
+        function tab(id) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.tabs .tab-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        function subTab(subId) {
+            document.querySelectorAll('.clicker-section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.clicker-nav .sub-tab-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(subId).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        let coins = parseInt(localStorage.getItem('arcade_coins')) || 0;
+        let pClick = parseInt(localStorage.getItem('arcade_pClick')) || 1;
+        let pSec = parseInt(localStorage.getItem('arcade_pSec')) || 0;
+        let cost1 = parseInt(localStorage.getItem('arcade_cost1')) || 15;
+        let cost2 = parseInt(localStorage.getItem('arcade_cost2')) || 50;
+        let tgClaimed = localStorage.getItem('arcade_tgClaimed') === 'true';
+        let currentBtnWord = localStorage.getItem('arcade_btnWord') || 'КЛИК!';
+        let usedPromos = JSON.parse(localStorage.getItem('arcade_usedPromos')) || {};
+        let hasAllCards = localStorage.getItem('arcade_hasAllCards') === 'true';
+
+        const promoCodes = {
+            "VOVAN": 10000, "MAKAR": 10000, "MARK": 50000,
+            "CLICK4K": 4000, "BONUS2026": 4000, "FREECOINS": 4000,
+            "EASYMONEY": 4000, "TAP4000": 4000, "LUCKYTAP": 4000,
+            "STARTUP": 4000, "COINMASTER": 4000, "HIDDEN40": 4000, "SUPERCLICK": 4000
+        };
+
+        function saveGame() {
+            localStorage.setItem('arcade_coins', coins);
+            localStorage.setItem('arcade_pClick', pClick);
+            localStorage.setItem('arcade_pSec', pSec);
+            localStorage.setItem('arcade_cost1', cost1);
+            localStorage.setItem('arcade_cost2', cost2);
+            localStorage.setItem('arcade_tgClaimed', tgClaimed);
+            localStorage.setItem('arcade_btnWord', currentBtnWord);
+            localStorage.setItem('arcade_usedPromos', JSON.stringify(usedPromos));
+            localStorage.setItem('arcade_hasAllCards', hasAllCards);
+        }
+
+        function hitCore() {
+            coins += pClick;
+            updClick();
+        }
+
+        function buyUpg(type) {
+            if (type === 1 && coins >= cost1) {
+                coins -= cost1; pClick += 1; cost1 = Math.round(cost1 * 1.5);
+            } else if (type === 2 && coins >= cost2) {
+                coins -= cost2; pSec += 1; cost2 = Math.round(cost2 * 1.6);
+            }
+            updClick();
+        }
+
+        function claimTgBonus() {
+            if (tgClaimed) return;
+            window.open('https://t.me', '_blank');
+            coins += 200;
+            tgClaimed = true;
+            updClick();
+        }
+
+        function activatePromo() {
+            const input = document.getElementById('promo-input').value.trim().toUpperCase();
+            const hint = document.getElementById('promo-hint');
+            if (promoCodes[input] !== undefined) {
+                if (!usedPromos[input]) {
+                    usedPromos[input] = true;
+                    coins += promoCodes[input];
+                    hint.style.color = "#4caf50";
+                    hint.textContent = "Успешно! +" + promoCodes[input] + " 🪙";
+                    updClick();
+                } else {
+                    hint.style.color = "#fe019a";
+                    hint.textContent = "Уже активирован!";
+                }
+            } else {
+                hint.style.color = "#fe019a";
+                hint.textContent = "Код не найден!";
+            }
+            document.getElementById('promo-input').value = "";
+        }
+
+        function buyWord(newWord, price) {
+            if (coins >= price) {
+                coins -= price;
+                currentBtnWord = newWord;
+                document.getElementById('core-btn').textContent = currentBtnWord;
+                alert("Название изменено!");
+                updClick();
+            } else {
+                alert("Не хватает монет!");
+            }
+        }
+
+        function updClick() {
+            document.getElementById('coins').textContent = coins;
+            document.getElementById('per-click').textContent = pClick;
+            document.getElementById('per-sec').textContent = pSec;
+            document.getElementById('cost1').textContent = cost1;
+            document.getElementById('cost2').textContent = cost2;
+            document.getElementById('core-btn').textContent = currentBtnWord;
+            const tgBtn = document.getElementById('tg-btn');
+            if (tgClaimed) {
+                tgBtn.textContent = "✅ Получено +200";
+                tgBtn.disabled = true;
+            }
+            saveGame();
+        }
+
+        setInterval(() => {
+            if (pSec > 0) { coins += pSec; updClick(); }
+        }, 1000);
+
+        let secretNum, attempts;
+        function resetGuess() {
+            secretNum = Math.floor(Math.random() * 100) + 1;
+            attempts = 0;
+            document.getElementById('guess-hint').textContent = "Число загадано!";
+            document.getElementById('user-num').value = "";
+        }
+        function checkGuess() {
+            const input = document.getElementById('user-num');
+            const val = parseInt(input.value);
+            const hint = document.getElementById('guess-hint');
+            if (isNaN(val) || val < 1 || val > 100) { hint.textContent = "Введи от 1 до 100!"; return; }
+            attempts++;
+            if (val === secretNum) {
+                hint.innerHTML = "<span style='color:#4caf50;'>Угадал!</span>";
+            } else if (val < secretNum) {
+                hint.textContent = "Загаданное число БОЛЬШЕ";
+            } else {
+                hint.textContent = "Загаданное число МЕНЬШЕ";
+            }
+        }
+
+        window.addEventListener('keydown', function(event) {
+            if (event.key === 'z' || event.key === 'Z' || event.key === 'я' || event.key === 'Я') {
+                if (document.activeElement.tagName !== 'INPUT') {
+                    document.getElementById('admin-modal').style.display = 'flex';
+                }
+            }
+        });
+
+        function closeAdmin() {
+            document.getElementById('admin-modal').style.display = 'none';
+            document.getElementById('admin-pass').value = "";
+            document.getElementById('admin-err').textContent = "";
+        }
+
+        function checkAdminPassword() {
+            const pass = document.getElementById('admin-pass').value;
+            const err = document.getElementById('admin-err');
+            if (pass === "mark2015bylove") {
+                document.getElementById('admin-auth').style.display = 'none';
+                document.getElementById('admin-panel').style.display = 'block';
+                err.textContent = "";
+            } else {
+                err.textContent = "Неверный пароль!";
+            }
+        }
+
+        function triggerAdminCheat() {
+            coins += 10000000;
+            hasAllCards = true;
+            const keys = Object.keys(promoCodes);
+            const randCode = keys[Math.floor(Math.random() * keys.length)];
+            document.getElementById('generated-promo').textContent = randCode;
+            updClick();
+            alert("Админ-читы активированы!");
+        }
+
+        resetGuess();
+        updClick();
+    </script>
+</body>
+</html>
+
